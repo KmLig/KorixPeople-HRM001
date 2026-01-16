@@ -1,0 +1,262 @@
+<div class="p-8">
+  <div class="max-w-[1400px] mx-auto space-y-8">
+    <!-- Breadcrumb & Header -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <div class="flex items-center gap-2 text-sm text-slate-500 mb-1">
+          <span>Home</span>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="text-primary font-medium">Attendance Dashboard</span>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Attendance & Shift Management</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <input 
+            [(ngModel)]="selectedDate"
+            class="pl-10 pr-4 py-2 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 focus:ring-primary focus:border-primary shadow-sm" 
+            type="date"/>
+          <span class="absolute left-3 top-2.5 material-symbols-outlined text-slate-400 text-lg pointer-events-none">calendar_today</span>
+        </div>
+        <button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-colors">
+          <span class="material-symbols-outlined text-lg">download</span>
+          Export Report
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Card 1: On Time Today -->
+      <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">On Time Today</p>
+            <h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
+              {{ onTimeToday() }} <span class="text-lg text-slate-400 font-normal">(92%)</span>
+            </h3>
+          </div>
+          <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-emerald-600 font-medium flex items-center">
+            <span class="material-symbols-outlined text-sm mr-0.5">trending_up</span>
+            +2%
+          </span>
+          <span class="text-slate-400 ml-2">vs yesterday</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Late Arrivals -->
+      <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">Late Arrivals</p>
+            <h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">{{ lateArrivals() }}</h3>
+          </div>
+          <div class="p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600 dark:text-amber-400">
+            <span class="material-symbols-outlined">schedule</span>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-red-600 font-medium flex items-center">
+            <span class="material-symbols-outlined text-sm mr-0.5">trending_up</span>
+            +2
+          </span>
+          <span class="text-slate-400 ml-2">vs yesterday</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Absent -->
+      <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">Absent</p>
+            <h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">{{ absent() }}</h3>
+          </div>
+          <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400">
+            <span class="material-symbols-outlined">person_off</span>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-slate-500 font-medium flex items-center">
+            <span class="material-symbols-outlined text-sm mr-0.5">remove</span>
+            0%
+          </span>
+          <span class="text-slate-400 ml-2">no change</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Currently Clocked In -->
+      <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">Currently Clocked In</p>
+            <h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">{{ currentlyClockedIn() }}</h3>
+          </div>
+          <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-primary">
+            <span class="material-symbols-outlined">badge</span>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-emerald-600 font-medium flex items-center">
+            <span class="material-symbols-outlined text-sm mr-0.5">trending_up</span>
+            +5
+          </span>
+          <span class="text-slate-400 ml-2">vs yesterday</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Section Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column: Data Table -->
+      <div class="lg:col-span-2 space-y-4">
+        <!-- Toggle Controls -->
+        <div class="bg-surface-light dark:bg-surface-dark p-1 rounded-xl inline-flex border border-slate-200 dark:border-slate-800">
+          <button 
+            (click)="selectedView.set('attendance')"
+            [class.bg-primary]="selectedView() === 'attendance'"
+            [class.text-white]="selectedView() === 'attendance'"
+            [class.shadow-sm]="selectedView() === 'attendance'"
+            class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            Attendance Log
+          </button>
+          <button 
+            (click)="selectedView.set('shifts')"
+            [class.bg-primary]="selectedView() === 'shifts'"
+            [class.text-white]="selectedView() === 'shifts'"
+            [class.shadow-sm]="selectedView() === 'shifts'"
+            class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            Shift Schedule
+          </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Daily Logs</h3>
+            <button class="text-sm text-primary font-semibold hover:underline">View All</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500">
+                <tr>
+                  <th class="px-6 py-4 font-semibold">Employee</th>
+                  <th class="px-6 py-4 font-semibold">Date</th>
+                  <th class="px-6 py-4 font-semibold text-center">Check-in</th>
+                  <th class="px-6 py-4 font-semibold text-center">Check-out</th>
+                  <th class="px-6 py-4 font-semibold text-center">Hours</th>
+                  <th class="px-6 py-4 font-semibold">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                @for (log of attendanceLogs(); track log.id) {
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="size-9 rounded-full bg-cover bg-center" [style.background-image]="'url(' + log.employee.avatar + ')'"></div>
+                        <div>
+                          <p class="font-semibold text-slate-900 dark:text-white">{{ log.employee.name }}</p>
+                          <p class="text-xs text-slate-500">{{ log.employee.department }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 dark:text-slate-400">{{ log.date }}</td>
+                    <td class="px-6 py-4 text-center font-medium text-slate-900 dark:text-white">{{ log.checkIn || '--:--' }}</td>
+                    <td class="px-6 py-4 text-center font-medium text-slate-900 dark:text-white">{{ log.checkOut || '--:--' }}</td>
+                    <td class="px-6 py-4 text-center text-slate-600 dark:text-slate-400">{{ log.hours || '--' }}</td>
+                    <td class="px-6 py-4">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border" [ngClass]="getStatusClass(log.status)">
+                        {{ getStatusLabel(log.status) }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+            <nav class="flex items-center gap-2">
+              <button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 disabled:opacity-50">
+                <span class="material-symbols-outlined">chevron_left</span>
+              </button>
+              <button class="size-8 rounded bg-primary text-white font-medium text-sm flex items-center justify-center">1</button>
+              <button class="size-8 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm flex items-center justify-center">2</button>
+              <button class="size-8 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm flex items-center justify-center">3</button>
+              <button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                <span class="material-symbols-outlined">chevron_right</span>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Shift Management Panel -->
+      <div class="space-y-6">
+        <!-- Actions Card -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Shift Management</h3>
+          <div class="flex flex-col gap-3">
+            <button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+              <span class="material-symbols-outlined">calendar_add_on</span>
+              Assign New Shift
+            </button>
+            <button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+              <span class="material-symbols-outlined">rule_settings</span>
+              Manage Schedules
+            </button>
+          </div>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 class="font-bold text-slate-900 dark:text-white">Pending Requests</h3>
+            <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">3</span>
+          </div>
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (request of dataService.leaveRequests(); track request.id) {
+              @if (request.status === 'pending') {
+                <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <div class="flex items-start gap-3">
+                    <div class="size-8 rounded-full bg-cover bg-center shrink-0" [style.background-image]="'url(' + request.employee.avatar + ')'"></div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ request.employee.name }}</p>
+                      <p class="text-xs text-slate-500 mb-2">{{ request.reason || request.type }}</p>
+                      <div class="flex gap-2">
+                        <button class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">Approve</button>
+                        <button class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Reject</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+          <div class="p-3 text-center border-t border-slate-100 dark:border-slate-800">
+            <button class="text-sm text-slate-500 hover:text-primary font-medium transition-colors">View All Requests</button>
+          </div>
+        </div>
+
+        <!-- Quick Stats Mini Card -->
+        <div class="bg-gradient-to-br from-primary to-blue-600 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 size-24 bg-white/10 rounded-full blur-xl"></div>
+          <div class="absolute -left-4 -bottom-4 size-16 bg-white/10 rounded-full blur-lg"></div>
+          <h4 class="text-lg font-bold relative z-10">Monthly Summary</h4>
+          <p class="text-blue-100 text-sm mb-4 relative z-10">Total hours logged this month</p>
+          <div class="flex items-end gap-2 relative z-10">
+            <span class="text-4xl font-extrabold">2,405</span>
+            <span class="text-sm text-blue-100 mb-1">hrs</span>
+          </div>
+          <div class="w-full bg-white/20 h-1.5 rounded-full mt-4 relative z-10">
+            <div class="bg-white h-1.5 rounded-full" style="width: 75%"></div>
+          </div>
+          <p class="text-xs text-blue-100 mt-2 relative z-10">75% of monthly capacity used</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
