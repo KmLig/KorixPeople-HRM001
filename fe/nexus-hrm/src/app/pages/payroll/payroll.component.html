@@ -1,0 +1,252 @@
+<div class="flex-1 w-full max-w-[1400px] mx-auto p-6 md:p-8 pt-2">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-[#0d121b] dark:text-white text-3xl md:text-4xl font-extrabold tracking-tight">Payroll Overview</h1>
+      <p class="text-[#4c669a] dark:text-gray-400 text-base font-medium">Manage financial records and pay cycles for Oct 2023</p>
+    </div>
+    <div class="flex gap-3">
+      <button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-white dark:bg-[#1a202c] border border-[#e7ebf3] dark:border-[#2d3748] text-[#0d121b] dark:text-white text-sm font-bold hover:bg-[#f8f9fc] dark:hover:bg-[#2d3748]/80 transition-colors">
+        <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+        <span>Period: Oct 1-31</span>
+      </button>
+      <button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-[#e7ebf3] dark:bg-[#2d3748] text-[#0d121b] dark:text-white text-sm font-bold hover:bg-[#dce1eb] dark:hover:bg-[#4a5568] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">download</span>
+        <span>Export Data</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    <!-- Stat 1: Total Payroll -->
+    <div class="flex flex-col gap-4 p-6 rounded-xl bg-white dark:bg-[#1a202c] border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm">
+      <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-1">
+          <p class="text-[#4c669a] dark:text-gray-400 text-sm font-semibold">Total Payroll</p>
+          <p class="text-[#0d121b] dark:text-white text-2xl font-bold tracking-tight">{{ formatCurrency(totalPayroll()) }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">attach_money</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">trending_up</span> 2.1%
+        </span>
+        <span class="text-[#4c669a] dark:text-gray-500 text-xs">vs last month</span>
+      </div>
+    </div>
+
+    <!-- Stat 2: Net Salaries Paid -->
+    <div class="flex flex-col gap-4 p-6 rounded-xl bg-white dark:bg-[#1a202c] border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm">
+      <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-1">
+          <p class="text-[#4c669a] dark:text-gray-400 text-sm font-semibold">Net Salaries Paid</p>
+          <p class="text-[#0d121b] dark:text-white text-2xl font-bold tracking-tight">{{ formatCurrency(netSalariesPaid()) }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">trending_up</span> 1.8%
+        </span>
+        <span class="text-[#4c669a] dark:text-gray-500 text-xs">vs last month</span>
+      </div>
+    </div>
+
+    <!-- Stat 3: Tax & Deductions -->
+    <div class="flex flex-col gap-4 p-6 rounded-xl bg-white dark:bg-[#1a202c] border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm">
+      <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-1">
+          <p class="text-[#4c669a] dark:text-gray-400 text-sm font-semibold">Tax & Deductions</p>
+          <p class="text-[#0d121b] dark:text-white text-2xl font-bold tracking-tight">{{ formatCurrency(taxAndDeductions()) }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
+          <span class="material-symbols-outlined">percent</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">trending_flat</span> 0.5%
+        </span>
+        <span class="text-[#4c669a] dark:text-gray-500 text-xs">vs last month</span>
+      </div>
+    </div>
+
+    <!-- Stat 4: Payment Status -->
+    <div class="flex flex-col gap-4 p-6 rounded-xl bg-white dark:bg-[#1a202c] border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm">
+      <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-1">
+          <p class="text-[#4c669a] dark:text-gray-400 text-sm font-semibold">Payment Status</p>
+          <p class="text-[#0d121b] dark:text-white text-2xl font-bold tracking-tight">Processing</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
+          <span class="material-symbols-outlined">pending</span>
+        </div>
+      </div>
+      <div class="w-full bg-[#e7ebf3] dark:bg-[#2d3748] rounded-full h-1.5 mt-2">
+        <div class="bg-amber-500 h-1.5 rounded-full transition-all" [style.width.%]="processingProgress()"></div>
+      </div>
+      <span class="text-[#4c669a] dark:text-gray-500 text-xs">{{ processingProgress() }}% employees processed</span>
+    </div>
+  </div>
+
+  <!-- Middle Section: Chart + Widgets -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Chart -->
+    <div class="lg:col-span-2 bg-white dark:bg-[#1a202c] rounded-xl border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm p-6">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-[#0d121b] dark:text-white text-lg font-bold">Payroll Spending History</h3>
+          <p class="text-[#4c669a] dark:text-gray-400 text-sm">Monthly disbursement trends</p>
+        </div>
+        <div class="flex gap-2">
+          <span class="w-3 h-3 rounded-full bg-primary"></span>
+          <span class="text-xs text-[#4c669a] dark:text-gray-400 font-medium">Net Pay</span>
+          <span class="w-3 h-3 rounded-full bg-[#e7ebf3] dark:bg-[#4a5568] ml-2"></span>
+          <span class="text-xs text-[#4c669a] dark:text-gray-400 font-medium">Tax</span>
+        </div>
+      </div>
+      <div class="h-[240px] w-full flex items-end justify-between gap-2 sm:gap-4 px-2">
+        @for (month of ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']; track month; let i = $index) {
+          <div class="flex flex-col items-center gap-2 h-full justify-end flex-1 group cursor-pointer">
+            <div class="w-full max-w-[40px] bg-[#e7ebf3] dark:bg-[#2d3748] rounded-t-sm relative flex flex-col justify-end group-hover:bg-[#dce1eb] transition-all" [style.height.%]="30 + (i * 5)">
+              <div class="bg-primary w-full rounded-t-sm opacity-90 group-hover:opacity-100 transition-all" [style.height.%]="65 + (i * 2)"></div>
+            </div>
+            <span class="text-xs font-semibold text-[#4c669a] dark:text-gray-500">{{ month }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Widgets -->
+    <div class="flex flex-col gap-6">
+      <!-- Quick Links -->
+      <div class="bg-white dark:bg-[#1a202c] rounded-xl border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm p-6">
+        <h3 class="text-[#0d121b] dark:text-white text-lg font-bold mb-4">Quick Links</h3>
+        <div class="flex flex-col gap-3">
+          <button class="flex items-center justify-between w-full p-3 rounded-lg bg-background-light dark:bg-[#2d3748] hover:bg-[#e7ebf3] dark:hover:bg-[#4a5568] transition-colors group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+              </div>
+              <span class="text-sm font-semibold text-[#0d121b] dark:text-white">Payslips</span>
+            </div>
+            <span class="material-symbols-outlined text-[#4c669a] text-[18px]">arrow_forward</span>
+          </button>
+          <button class="flex items-center justify-between w-full p-3 rounded-lg bg-background-light dark:bg-[#2d3748] hover:bg-[#e7ebf3] dark:hover:bg-[#4a5568] transition-colors group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                <span class="material-symbols-outlined text-[18px]">description</span>
+              </div>
+              <span class="text-sm font-semibold text-[#0d121b] dark:text-white">Tax Reports</span>
+            </div>
+            <span class="material-symbols-outlined text-[#4c669a] text-[18px]">arrow_forward</span>
+          </button>
+          <button class="flex items-center justify-between w-full p-3 rounded-lg bg-background-light dark:bg-[#2d3748] hover:bg-[#e7ebf3] dark:hover:bg-[#4a5568] transition-colors group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                <span class="material-symbols-outlined text-[18px]">settings_accessibility</span>
+              </div>
+              <span class="text-sm font-semibold text-[#0d121b] dark:text-white">Adjustments</span>
+            </div>
+            <span class="material-symbols-outlined text-[#4c669a] text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Compliance -->
+      <div class="flex-1 bg-white dark:bg-[#1a202c] rounded-xl border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm p-6">
+        <h3 class="text-[#0d121b] dark:text-white text-lg font-bold mb-4">Compliance</h3>
+        <div class="flex flex-col gap-4">
+          <div class="flex gap-3 items-start">
+            <div class="flex flex-col items-center bg-[#f3f4f6] dark:bg-[#2d3748] rounded px-2 py-1 min-w-[50px]">
+              <span class="text-[10px] uppercase font-bold text-[#4c669a]">Oct</span>
+              <span class="text-lg font-bold text-[#0d121b] dark:text-white">15</span>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-[#0d121b] dark:text-white">Tax Filing Deadline</p>
+              <p class="text-xs text-[#4c669a]">Quarterly federal tax return due.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start">
+            <div class="flex flex-col items-center bg-[#f3f4f6] dark:bg-[#2d3748] rounded px-2 py-1 min-w-[50px]">
+              <span class="text-[10px] uppercase font-bold text-[#4c669a]">Oct</span>
+              <span class="text-lg font-bold text-[#0d121b] dark:text-white">28</span>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-[#0d121b] dark:text-white">Pay Cycle Review</p>
+              <p class="text-xs text-[#4c669a]">Finalize changes for Nov cycle.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Table -->
+  <div class="bg-white dark:bg-[#1a202c] rounded-xl border border-[#e7ebf3] dark:border-[#2d3748] shadow-sm flex flex-col">
+    <div class="p-6 border-b border-[#e7ebf3] dark:border-[#2d3748] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h3 class="text-[#0d121b] dark:text-white text-lg font-bold">Pending Approvals</h3>
+        <p class="text-[#4c669a] dark:text-gray-400 text-sm">Upcoming pay cycle for Oct 31, 2023</p>
+      </div>
+      <button class="flex min-w-[140px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-blue-700 text-white gap-2 text-sm font-bold leading-normal transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+        <span>Run Payroll</span>
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-[#f8f9fc] dark:bg-[#2d3748]/50 border-b border-[#e7ebf3] dark:border-[#2d3748]">
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Employee</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Role</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Gross Salary</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Deductions</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Net Pay</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-xs font-bold text-[#4c669a] dark:text-gray-400 uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#e7ebf3] dark:divide-[#2d3748]">
+          @for (record of payrollRecords(); track record.id) {
+            <tr class="hover:bg-gray-50 dark:hover:bg-[#2d3748]/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-gray-200 overflow-hidden">
+                    <img [alt]="record.employee.name" class="w-full h-full object-cover" [src]="record.employee.avatar"/>
+                  </div>
+                  <span class="text-sm font-bold text-[#0d121b] dark:text-white">{{ record.employee.name }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-[#4c669a] dark:text-gray-300">{{ record.role || record.employee.position }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-[#0d121b] dark:text-white">{{ formatCurrency(record.baseSalary) }}</td>
+              <td class="px-6 py-4 text-sm text-red-600 dark:text-red-400 font-medium">-{{ formatCurrency(record.deductions) }}</td>
+              <td class="px-6 py-4 text-sm font-bold text-[#0d121b] dark:text-white">{{ formatCurrency(record.netPay) }}</td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold" [ngClass]="getStatusClass(record.status)">
+                  <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                    'bg-amber-500': record.status === 'pending',
+                    'bg-green-500': record.status === 'processed' || record.status === 'paid',
+                    'bg-blue-500': record.status === 'processed'
+                  }"></span>
+                  {{ record.status.charAt(0).toUpperCase() + record.status.slice(1) }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button class="text-[#4c669a] hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-[20px]">edit_document</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="h-8"></div>
+</div>
