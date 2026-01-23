@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Employee, AttendanceLog, Shift, LeaveRequest, PayrollRecord, PerformanceReview, JobApplication } from '../models/employee.model';
+import { Employee, AttendanceLog, Shift, LeaveRequest, PayrollRecord, PerformanceReview, JobApplication, ReviewCycle, Goal } from '../models/employee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +74,8 @@ export class DataService {
   leaveRequests = signal<LeaveRequest[]>([]);
   payrollRecords = signal<PayrollRecord[]>([]);
   performanceReviews = signal<PerformanceReview[]>([]);
+  reviewCycles = signal<ReviewCycle[]>([]);
+  goals = signal<Goal[]>([]);
   jobApplications = signal<JobApplication[]>([]);
 
   constructor() {
@@ -152,6 +154,121 @@ export class DataService {
         endDate: '2023-10-26',
         days: 1,
         status: 'pending'
+      }
+    ]);
+
+    // Initialize payroll records
+    this.payrollRecords.set([
+      {
+        id: '1',
+        employee: employees[0],
+        period: 'Oct 2023',
+        baseSalary: 8500,
+        deductions: 1850,
+        bonuses: 0,
+        netPay: 6650,
+        status: 'pending',
+        role: 'Engineering Lead'
+      },
+      {
+        id: '2',
+        employee: employees[1],
+        period: 'Oct 2023',
+        baseSalary: 7200,
+        deductions: 1400,
+        bonuses: 0,
+        netPay: 5800,
+        status: 'processed',
+        role: 'Product Designer'
+      },
+      {
+        id: '3',
+        employee: employees[2],
+        period: 'Oct 2023',
+        baseSalary: 5900,
+        deductions: 1100,
+        bonuses: 0,
+        netPay: 4800,
+        status: 'pending',
+        role: 'Marketing Specialist'
+      }
+    ]);
+
+    // Initialize performance reviews
+    this.performanceReviews.set([
+      {
+        id: '1',
+        employee: employees[0],
+        cycle: 'Q3 2023 Review',
+        rating: 4.9,
+        completed: true,
+        dueDate: '2023-10-31',
+        manager: 'Sarah Jenkins'
+      },
+      {
+        id: '2',
+        employee: employees[1],
+        cycle: 'Q3 2023 Review',
+        rating: 4.8,
+        completed: true,
+        dueDate: '2023-10-31',
+        manager: 'Michael Chen'
+      },
+      {
+        id: '3',
+        employee: employees[2],
+        cycle: 'Q3 2023 Review',
+        rating: 4.7,
+        completed: false,
+        dueDate: '2023-10-31',
+        manager: 'Alex Morgan'
+      }
+    ]);
+
+    // Initialize review cycles
+    this.reviewCycles.set([
+      {
+        id: '1',
+        name: 'Q3 2023 Review',
+        departments: 'All Depts',
+        completion: 86,
+        dueDate: 'Oct 31',
+        icon: 'calendar_month',
+        iconColor: 'indigo'
+      },
+      {
+        id: '2',
+        name: 'Eng. Mid-Year',
+        departments: 'Engineering',
+        completion: 45,
+        dueDate: 'Nov 15',
+        icon: 'code',
+        iconColor: 'purple'
+      }
+    ]);
+
+    // Initialize goals
+    this.goals.set([
+      {
+        id: '1',
+        title: 'Increase Employee Retention',
+        description: 'Objective: Maintain voluntary turnover below 5%',
+        progress: 92,
+        color: 'primary'
+      },
+      {
+        id: '2',
+        title: 'Complete Leadership Training',
+        description: 'Objective: 100% of managers certified by Q4',
+        progress: 65,
+        color: 'orange'
+      },
+      {
+        id: '3',
+        title: 'Streamline Recruitment Process',
+        description: 'Objective: Reduce time-to-hire to 25 days',
+        progress: 78,
+        color: 'green'
       }
     ]);
   }
