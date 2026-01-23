@@ -50,6 +50,7 @@ export interface PayrollRecord {
   bonuses: number;
   netPay: number;
   status: 'pending' | 'processed' | 'paid';
+  role?: string;
 }
 
 export interface PerformanceReview {
@@ -59,6 +60,40 @@ export interface PerformanceReview {
   rating: number;
   completed: boolean;
   dueDate: string;
+  manager?: string;
+}
+
+export interface ReviewCycle {
+  id: string;
+  name: string;
+  departments: string;
+  completion: number;
+  dueDate: string;
+  icon?: string;
+  iconColor?: string;
+}
+
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  progress: number;
+  color: string;
+}
+
+export interface PayrollStats {
+  totalPayroll: number;
+  netSalariesPaid: number;
+  taxAndDeductions: number;
+  paymentStatus: string;
+  processingProgress: number;
+}
+
+export interface PerformanceStats {
+  reviewsCompleted: number;
+  averageRating: number;
+  pendingReviews: number;
+  goalsOnTrack: number;
 }
 
 export interface JobApplication {
