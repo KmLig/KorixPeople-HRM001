@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Employee, AttendanceLog, Shift, LeaveRequest, PayrollRecord, PerformanceReview, JobApplication, ReviewCycle, Goal } from '../models/employee.model';
+import { Employee, AttendanceLog, Shift, LeaveRequest, PayrollRecord, PerformanceReview, JobApplication, ReviewCycle, Goal, Holiday, LeaveBalance } from '../models/employee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +77,8 @@ export class DataService {
   reviewCycles = signal<ReviewCycle[]>([]);
   goals = signal<Goal[]>([]);
   jobApplications = signal<JobApplication[]>([]);
+  holidays = signal<Holiday[]>([]);
+  leaveBalances = signal<LeaveBalance[]>([]);
 
   constructor() {
     this.initializeMockData();
@@ -139,20 +141,47 @@ export class DataService {
       {
         id: '1',
         employee: employees[0],
-        type: 'Overtime Request',
-        startDate: '2023-10-25',
-        endDate: '2023-10-25',
-        days: 1,
+        type: 'Sick Leave',
+        startDate: '2023-10-12',
+        endDate: '2023-10-14',
+        days: 3,
         status: 'pending',
-        reason: 'Requested Overtime (2h)'
+        reason: 'Medical appointment'
       },
       {
         id: '2',
         employee: employees[1],
-        type: 'Shift Swap',
-        startDate: '2023-10-26',
-        endDate: '2023-10-26',
+        type: 'Vacation',
+        startDate: '2023-10-20',
+        endDate: '2023-10-25',
+        days: 6,
+        status: 'approved'
+      },
+      {
+        id: '3',
+        employee: employees[2],
+        type: 'Personal',
+        startDate: '2023-10-15',
+        endDate: '2023-10-15',
         days: 1,
+        status: 'pending'
+      },
+      {
+        id: '4',
+        employee: employees[3],
+        type: 'Sick Leave',
+        startDate: '2023-10-12',
+        endDate: '2023-10-13',
+        days: 2,
+        status: 'rejected'
+      },
+      {
+        id: '5',
+        employee: employees[4],
+        type: 'Vacation',
+        startDate: '2023-11-01',
+        endDate: '2023-11-05',
+        days: 5,
         status: 'pending'
       }
     ]);
@@ -269,6 +298,63 @@ export class DataService {
         description: 'Objective: Reduce time-to-hire to 25 days',
         progress: 78,
         color: 'green'
+      }
+    ]);
+
+    // Initialize holidays
+    this.holidays.set([
+      {
+        id: '1',
+        name: 'New Year\'s Day',
+        date: '2024-01-01',
+        type: 'national',
+        isRecurring: true,
+        description: 'New Year celebration'
+      },
+      {
+        id: '2',
+        name: 'Independence Day',
+        date: '2024-07-04',
+        type: 'national',
+        isRecurring: true
+      },
+      {
+        id: '3',
+        name: 'Christmas Day',
+        date: '2024-12-25',
+        type: 'national',
+        isRecurring: true
+      },
+      {
+        id: '4',
+        name: 'Company Foundation Day',
+        date: '2024-10-15',
+        type: 'company',
+        isRecurring: true
+      }
+    ]);
+
+    // Initialize leave balances
+    this.leaveBalances.set([
+      {
+        employeeId: '1',
+        sickLeave: 10,
+        vacation: 15,
+        personal: 5,
+        total: 30,
+        used: 8,
+        pending: 3,
+        available: 19
+      },
+      {
+        employeeId: '2',
+        sickLeave: 10,
+        vacation: 15,
+        personal: 5,
+        total: 30,
+        used: 5,
+        pending: 2,
+        available: 23
       }
     ]);
   }
