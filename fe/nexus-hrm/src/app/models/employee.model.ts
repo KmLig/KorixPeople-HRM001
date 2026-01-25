@@ -104,3 +104,38 @@ export interface JobApplication {
   appliedDate: string;
   resume?: string;
 }
+
+export interface TimeTracking {
+  id: string;
+  employee: Employee;
+  date: string;
+  clockIn?: string;
+  clockOut?: string;
+  breakStart?: string;
+  breakEnd?: string;
+  totalHours?: number;
+  breakHours?: number;
+  overtimeHours?: number;
+  location?: string;
+  status: 'clocked-in' | 'clocked-out' | 'on-break';
+}
+
+export interface Holiday {
+  id: string;
+  name: string;
+  date: string;
+  type: 'national' | 'company' | 'regional';
+  isRecurring: boolean;
+  description?: string;
+}
+
+export interface LeaveBalance {
+  employeeId: string;
+  sickLeave: number;
+  vacation: number;
+  personal: number;
+  total: number;
+  used: number;
+  pending: number;
+  available: number;
+}
