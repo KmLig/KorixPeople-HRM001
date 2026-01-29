@@ -357,6 +357,52 @@ export class DataService {
         available: 23
       }
     ]);
+
+    // Initialize job applications
+    this.jobApplications.set([
+      {
+        id: '1',
+        candidateName: 'Sarah Jenkins',
+        position: 'Senior UX Designer',
+        status: 'applied',
+        appliedDate: '2 hours ago'
+      },
+      {
+        id: '2',
+        candidateName: 'Mike Ross',
+        position: 'Senior UX Designer',
+        status: 'applied',
+        appliedDate: '5 hours ago'
+      },
+      {
+        id: '3',
+        candidateName: 'David Kim',
+        position: 'Senior UX Designer',
+        status: 'screening',
+        appliedDate: '1 day ago'
+      },
+      {
+        id: '4',
+        candidateName: 'Jessica Pearson',
+        position: 'Senior UX Designer',
+        status: 'interview',
+        appliedDate: '2 days ago'
+      },
+      {
+        id: '5',
+        candidateName: 'Louis Litt',
+        position: 'Senior UX Designer',
+        status: 'offer',
+        appliedDate: '3 days ago'
+      },
+      {
+        id: '6',
+        candidateName: 'Donna Paulsen',
+        position: 'Senior UX Designer',
+        status: 'hired',
+        appliedDate: '1 week ago'
+      }
+    ]);
   }
 
   getEmployeeById(id: string): Employee | undefined {
