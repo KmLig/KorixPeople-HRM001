@@ -1,0 +1,182 @@
+<div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+  <div class="max-w-[1440px] mx-auto flex flex-col gap-6 md:gap-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white">Shift Planning</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Manage employee shifts and schedules.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex gap-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-1">
+          <button 
+            (click)="selectedView.set('calendar')"
+            [class.bg-primary]="selectedView() === 'calendar'"
+            [class.text-white]="selectedView() === 'calendar'"
+            [class.text-slate-600]="selectedView() !== 'calendar'"
+            class="px-3 py-1.5 text-sm font-medium rounded transition-colors">
+            Calendar
+          </button>
+          <button 
+            (click)="selectedView.set('list')"
+            [class.bg-primary]="selectedView() === 'list'"
+            [class.text-white]="selectedView() === 'list'"
+            [class.text-slate-600]="selectedView() !== 'list'"
+            class="px-3 py-1.5 text-sm font-medium rounded transition-colors">
+            List
+          </button>
+        </div>
+        <button 
+          (click)="showShiftForm.set(true)"
+          class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/20">
+          <span class="material-symbols-outlined text-[20px]">add</span>
+          <span>Create Shift</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="flex flex-col gap-3 rounded-xl p-5 bg-white dark:bg-[#1a202c] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+        <div class="absolute right-0 top-0 p-5 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl text-primary">schedule</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Total Shifts</p>
+        <p class="text-slate-900 dark:text-white text-3xl font-black">{{ totalShifts() }}</p>
+      </div>
+
+      <div class="flex flex-col gap-3 rounded-xl p-5 bg-white dark:bg-[#1a202c] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+        <div class="absolute right-0 top-0 p-5 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl text-emerald-500">calendar_today</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Upcoming Shifts</p>
+        <p class="text-slate-900 dark:text-white text-3xl font-black">{{ upcomingShifts() }}</p>
+      </div>
+
+      <div class="flex flex-col gap-3 rounded-xl p-5 bg-white dark:bg-[#1a202c] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+        <div class="absolute right-0 top-0 p-5 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl text-orange-500">group</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Employees Scheduled</p>
+        <p class="text-slate-900 dark:text-white text-3xl font-black">{{ employees().length }}</p>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    @if (selectedView() === 'calendar') {
+      <div class="bg-white dark:bg-[#1a202c] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="font-bold text-slate-900 dark:text-white text-lg">{{ currentMonthName() }} {{ selectedYear() }}</h3>
+          <div class="flex gap-2">
+            <button 
+              (click)="previousMonth()"
+              class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500">
+              <span class="material-symbols-outlined text-lg">chevron_left</span>
+            </button>
+            <button 
+              (click)="nextMonth()"
+              class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500">
+              <span class="material-symbols-outlined text-lg">chevron_right</span>
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-7 gap-y-2 gap-x-1 text-center mb-2">
+          @for (day of weekDays; track day) {
+            <div class="text-[11px] font-bold text-slate-400 uppercase">{{ day }}</div>
+          }
+        </div>
+        <div class="grid grid-cols-7 gap-y-2 gap-x-1 text-center text-sm font-medium">
+          @for (dayInfo of calendarDays(); track $index) {
+            <div 
+              class="min-h-[80px] p-1 rounded-lg border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors"
+              [class.bg-slate-50]="dayInfo.isToday"
+              [class.dark:bg-slate-800/50]="dayInfo.isToday"
+              [class.border-primary]="dayInfo.isToday">
+              <span 
+                class="block mb-1"
+                [class.text-slate-300]="!dayInfo.isCurrentMonth"
+                [class.dark:text-slate-700]="!dayInfo.isCurrentMonth && dayInfo.isCurrentMonth === false"
+                [class.text-slate-700]="dayInfo.isCurrentMonth && !dayInfo.isToday"
+                [class.dark:text-slate-300]="dayInfo.isCurrentMonth && !dayInfo.isToday"
+                [class.text-primary]="dayInfo.isToday"
+                [class.font-bold]="dayInfo.isToday">
+                {{ dayInfo.day }}
+              </span>
+              <div class="space-y-1">
+                @for (shift of dayInfo.shifts.slice(0, 2); track shift.id) {
+                  <div 
+                    class="text-[10px] px-1.5 py-0.5 rounded truncate"
+                    [ngClass]="getShiftTypeColor(shift.type)">
+                    {{ shift.employee.name.split(' ')[0] }}: {{ shift.startTime }}-{{ shift.endTime }}
+                  </div>
+                }
+                @if (dayInfo.shifts.length > 2) {
+                  <div class="text-[10px] text-slate-500 dark:text-slate-400 px-1.5">+{{ dayInfo.shifts.length - 2 }} more</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- List View -->
+    @if (selectedView() === 'list') {
+      <div class="bg-white dark:bg-[#1a202c] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                <th class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Employee</th>
+                <th class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Date</th>
+                <th class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Time</th>
+                <th class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Type</th>
+                <th class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (shift of shifts(); track shift.id) {
+                <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                  <td class="p-4 whitespace-nowrap">
+                    <div class="flex items-center gap-3">
+                      <div class="size-9 rounded-full bg-slate-200 dark:bg-slate-700 bg-center bg-cover" [style.background-image]="'url(' + shift.employee.avatar + ')'"></div>
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-slate-900 dark:text-white">{{ shift.employee.name }}</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">{{ shift.employee.department }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-4 whitespace-nowrap">
+                    <span class="text-sm text-slate-600 dark:text-slate-400 font-medium">{{ shift.date }}</span>
+                  </td>
+                  <td class="p-4 whitespace-nowrap">
+                    <span class="text-sm text-slate-600 dark:text-slate-400">{{ shift.startTime }} - {{ shift.endTime }}</span>
+                  </td>
+                  <td class="p-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold" [ngClass]="getShiftTypeColor(shift.type)">
+                      {{ shift.type.charAt(0).toUpperCase() + shift.type.slice(1) }}
+                    </span>
+                  </td>
+                  <td class="p-4 whitespace-nowrap text-right">
+                    <div class="flex justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button class="size-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="Edit">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                      </button>
+                      <button class="size-8 flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors" title="Delete">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+              @if (shifts().length === 0) {
+                <tr>
+                  <td colspan="5" class="p-8 text-center text-slate-500 dark:text-slate-400">No shifts scheduled</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>
