@@ -1,0 +1,319 @@
+<div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+  <div class="max-w-[1600px] mx-auto flex flex-col h-full">
+    <!-- Page Heading -->
+    <div class="flex flex-col gap-1 mb-6">
+      <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Recruitment Dashboard</h2>
+      <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base">Overview of your hiring pipeline and active roles</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-3">
+        <div class="flex justify-between items-start">
+          <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-primary">
+            <span class="material-symbols-outlined">work</span>
+          </div>
+          <span class="flex items-center text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +2%
+          </span>
+        </div>
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Jobs</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ activeJobs() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-3">
+        <div class="flex justify-between items-start">
+          <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
+            <span class="material-symbols-outlined">groups</span>
+          </div>
+          <span class="flex items-center text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +12%
+          </span>
+        </div>
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Candidates</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ totalCandidates() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-3">
+        <div class="flex justify-between items-start">
+          <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600">
+            <span class="material-symbols-outlined">calendar_today</span>
+          </div>
+          <span class="flex items-center text-slate-500 dark:text-slate-400 text-xs font-bold bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[14px] mr-1">remove</span> 0%
+          </span>
+        </div>
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Interviews Today</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ interviewsToday() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-3">
+        <div class="flex justify-between items-start">
+          <div class="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+          <span class="flex items-center text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +5%
+          </span>
+        </div>
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Hired This Month</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ hiredThisMonth() }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout: Job List (Left) + Kanban (Right) -->
+    <div class="flex flex-col xl:flex-row gap-6 flex-1 min-h-[600px]">
+      <!-- Left Column: Active Jobs List -->
+      <div class="w-full xl:w-80 flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">Job Openings</h3>
+          <button class="text-primary text-sm font-semibold hover:underline">View All</button>
+        </div>
+        <div class="flex flex-col gap-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 h-full overflow-y-auto max-h-[600px]">
+          @for (job of jobs(); track job.id) {
+            <div 
+              (click)="selectJob(job.id)"
+              [class.bg-blue-50]="selectedJob() === job.id"
+              [class.dark:bg-blue-900/20]="selectedJob() === job.id"
+              [class.border-primary/20]="selectedJob() === job.id"
+              [class.hover:bg-slate-50]="selectedJob() !== job.id"
+              [class.dark:hover:bg-slate-700/50]="selectedJob() !== job.id"
+              class="p-3 rounded-lg border cursor-pointer transition-colors group"
+              [class.border-transparent]="selectedJob() !== job.id"
+              [class.hover:border-slate-200]="selectedJob() !== job.id"
+              [class.dark:hover:border-slate-600]="selectedJob() !== job.id">
+              <div class="flex justify-between items-start mb-1">
+                <h4 
+                  [class.text-primary]="selectedJob() === job.id"
+                  class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ job.title }}</h4>
+                <span 
+                  [class.bg-white]="selectedJob() === job.id"
+                  [class.dark:bg-slate-700]="selectedJob() === job.id"
+                  [class.bg-slate-100]="selectedJob() !== job.id"
+                  class="text-slate-600 dark:text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-100 dark:border-slate-600">{{ job.applicants }}</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">{{ job.department }} • {{ job.location }}</p>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                <div 
+                  [ngClass]="getProgressColor(job.progress)"
+                  class="h-full rounded-full transition-all" 
+                  [style.width.%]="job.progress"></div>
+              </div>
+              <div class="flex justify-between mt-1">
+                <span class="text-[10px] text-slate-400">Target: {{ job.target }} hires</span>
+                <span class="text-[10px] font-bold text-primary">Active</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Kanban Board -->
+      <div class="flex-1 flex flex-col overflow-hidden min-h-[500px]">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+            Candidate Pipeline 
+            @if (selectedJobData(); as job) {
+              <span class="text-slate-400 font-normal text-sm ml-2">({{ job.title }})</span>
+            }
+          </h3>
+          <div class="flex gap-2">
+            <button class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+              <span class="material-symbols-outlined text-[18px]">filter_list</span> Filter
+            </button>
+            <button class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+              <span class="material-symbols-outlined text-[18px]">sort</span> Sort
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-x-auto pb-4 kanban-container">
+          <div class="flex h-full gap-4 min-w-[1200px]">
+            <!-- Column 1: Applied -->
+            <div class="flex-1 min-w-[280px] flex flex-col bg-slate-100 dark:bg-slate-800/50 rounded-xl p-3 h-fit max-h-full">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <div class="size-2 rounded-full bg-blue-500"></div>
+                  <h4 class="font-bold text-slate-700 dark:text-slate-200 text-sm">Applied</h4>
+                </div>
+                <span class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs px-2 py-0.5 rounded-md font-bold shadow-sm">{{ applied().length }}</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                @for (app of applied(); track app.id) {
+                  <div class="bg-white dark:bg-slate-700 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:border-primary cursor-grab active:cursor-grabbing group">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-600"></div>
+                      <div>
+                        <h5 class="text-sm font-bold text-slate-900 dark:text-white">{{ app.candidateName }}</h5>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ app.appliedDate }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-600">
+                      <div class="flex text-yellow-400 text-[14px]">
+                        @for (filled of getRatingStars(4); track $index) {
+                          <span class="material-symbols-outlined text-[16px]" [class.filled]="filled">star</span>
+                        }
+                      </div>
+                      <button class="text-slate-400 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">visibility</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Column 2: Screening -->
+            <div class="flex-1 min-w-[280px] flex flex-col bg-slate-100 dark:bg-slate-800/50 rounded-xl p-3 h-fit max-h-full">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <div class="size-2 rounded-full bg-purple-500"></div>
+                  <h4 class="font-bold text-slate-700 dark:text-slate-200 text-sm">Screening</h4>
+                </div>
+                <span class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs px-2 py-0.5 rounded-md font-bold shadow-sm">{{ screening().length }}</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                @for (app of screening(); track app.id) {
+                  <div class="bg-white dark:bg-slate-700 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:border-primary cursor-grab active:cursor-grabbing group">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-600"></div>
+                      <div>
+                        <h5 class="text-sm font-bold text-slate-900 dark:text-white">{{ app.candidateName }}</h5>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Awaiting Feedback</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mb-2">
+                      <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-600 text-slate-600 dark:text-slate-300 text-[10px] rounded">Portfolio</span>
+                      <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-600 text-slate-600 dark:text-slate-300 text-[10px] rounded">Senior</span>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-600">
+                      <div class="flex text-yellow-400 text-[14px]">
+                        @for (filled of getRatingStars(4); track $index) {
+                          <span class="material-symbols-outlined text-[16px]" [class.filled]="filled">star</span>
+                        }
+                      </div>
+                      <button class="text-slate-400 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">visibility</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Column 3: Interview -->
+            <div class="flex-1 min-w-[280px] flex flex-col bg-slate-100 dark:bg-slate-800/50 rounded-xl p-3 h-fit max-h-full">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <div class="size-2 rounded-full bg-orange-500"></div>
+                  <h4 class="font-bold text-slate-700 dark:text-slate-200 text-sm">Interview</h4>
+                </div>
+                <span class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs px-2 py-0.5 rounded-md font-bold shadow-sm">{{ interview().length }}</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                @for (app of interview(); track app.id) {
+                  <div class="bg-white dark:bg-slate-700 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:border-primary cursor-grab active:cursor-grabbing group">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-600"></div>
+                      <div>
+                        <h5 class="text-sm font-bold text-slate-900 dark:text-white">{{ app.candidateName }}</h5>
+                        <div class="flex items-center gap-1 text-orange-600 text-[10px] font-bold mt-0.5">
+                          <span class="material-symbols-outlined text-[12px]">schedule</span> 2:00 PM Today
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-600">
+                      <div class="flex text-yellow-400 text-[14px]">
+                        @for (filled of getRatingStars(5); track $index) {
+                          <span class="material-symbols-outlined text-[16px]" [class.filled]="filled">star</span>
+                        }
+                      </div>
+                      <button class="text-slate-400 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">videocam</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Column 4: Offer -->
+            <div class="flex-1 min-w-[280px] flex flex-col bg-slate-100 dark:bg-slate-800/50 rounded-xl p-3 h-fit max-h-full">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <div class="size-2 rounded-full bg-cyan-500"></div>
+                  <h4 class="font-bold text-slate-700 dark:text-slate-200 text-sm">Offer</h4>
+                </div>
+                <span class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs px-2 py-0.5 rounded-md font-bold shadow-sm">{{ offer().length }}</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                @for (app of offer(); track app.id) {
+                  <div class="bg-white dark:bg-slate-700 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:border-primary cursor-grab active:cursor-grabbing group">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-600"></div>
+                      <div>
+                        <h5 class="text-sm font-bold text-slate-900 dark:text-white">{{ app.candidateName }}</h5>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Offer Sent: Yesterday</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-600">
+                      <div class="flex text-yellow-400 text-[14px]">
+                        @for (filled of getRatingStars(5); track $index) {
+                          <span class="material-symbols-outlined text-[16px]" [class.filled]="filled">star</span>
+                        }
+                      </div>
+                      <button class="text-slate-400 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">mail</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Column 5: Hired -->
+            <div class="flex-1 min-w-[280px] flex flex-col bg-green-50 dark:bg-green-900/10 rounded-xl p-3 h-fit max-h-full">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <div class="size-2 rounded-full bg-green-500"></div>
+                  <h4 class="font-bold text-slate-700 dark:text-slate-200 text-sm">Hired</h4>
+                </div>
+                <span class="bg-white dark:bg-slate-700 text-green-700 dark:text-green-300 text-xs px-2 py-0.5 rounded-md font-bold shadow-sm">{{ hired().length }}</span>
+              </div>
+              <div class="flex flex-col gap-3 overflow-y-auto pr-1">
+                @for (app of hired(); track app.id) {
+                  <div class="bg-white dark:bg-slate-700 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600 hover:border-green-500 cursor-grab active:cursor-grabbing group">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="size-8 rounded-full bg-slate-200 dark:bg-slate-600"></div>
+                      <div>
+                        <h5 class="text-sm font-bold text-slate-900 dark:text-white">{{ app.candidateName }}</h5>
+                        <p class="text-xs text-green-600 dark:text-green-400 font-medium">Joined Today</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-600">
+                      <div class="flex text-yellow-400 text-[14px]">
+                        @for (filled of getRatingStars(5); track $index) {
+                          <span class="material-symbols-outlined text-[16px]" [class.filled]="filled">star</span>
+                        }
+                      </div>
+                      <button class="text-slate-400 hover:text-green-600 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">check</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
