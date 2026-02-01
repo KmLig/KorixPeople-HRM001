@@ -205,36 +205,224 @@
 
           @if (activeTab() === 'personal') {
             <div class="bg-white p-6 rounded-xl border border-border-light shadow-sm">
-              <h3 class="text-lg font-bold text-text-main mb-4">Personal Information</h3>
-              <p class="text-text-secondary text-sm">Personal information coming soon...</p>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-text-main">Personal Information</h3>
+                <button class="text-primary text-sm font-medium hover:underline">Edit</button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Date of Birth</p>
+                  <p class="text-text-main font-medium">January 15, 1990</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Phone Number</p>
+                  <p class="text-text-main font-medium">+1 (555) 123-4567</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Emergency Contact</p>
+                  <p class="text-text-main font-medium">John Doe (Spouse)</p>
+                  <p class="text-xs text-text-secondary">+1 (555) 987-6543</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Address</p>
+                  <p class="text-text-main font-medium">123 Main Street</p>
+                  <p class="text-xs text-text-secondary">San Francisco, CA 94102</p>
+                </div>
+              </div>
             </div>
           }
 
           @if (activeTab() === 'job') {
             <div class="bg-white p-6 rounded-xl border border-border-light shadow-sm">
-              <h3 class="text-lg font-bold text-text-main mb-4">Job & Pay Information</h3>
-              <p class="text-text-secondary text-sm">Job and pay information coming soon...</p>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-text-main">Job & Pay Information</h3>
+                <button class="text-primary text-sm font-medium hover:underline">Edit</button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-6">
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Position</p>
+                  <p class="text-text-main font-medium">{{ emp.position }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Department</p>
+                  <p class="text-text-main font-medium">{{ emp.department }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Base Salary</p>
+                  <p class="text-text-main font-medium">$85,000 / year</p>
+                </div>
+                <div>
+                  <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold mb-1">Pay Frequency</p>
+                  <p class="text-text-main font-medium">Monthly</p>
+                </div>
+              </div>
+              <div class="border-t border-border-light pt-6">
+                <h4 class="text-sm font-bold text-text-main mb-4">Payroll History</h4>
+                <div class="space-y-3">
+                  @for (record of dataService.payrollRecords().slice(0, 3); track record.id) {
+                    <div class="flex items-center justify-between p-3 bg-background-light rounded-lg">
+                      <div>
+                        <p class="text-sm font-medium text-text-main">{{ record.period }}</p>
+                        <p class="text-xs text-text-secondary">Net Pay: ${{ record.netPay | number:'1.0-0' }}</p>
+                      </div>
+                      <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                        [class.bg-amber-100]="record.status === 'pending'"
+                        [class.text-amber-800]="record.status === 'pending'"
+                        [class.bg-blue-100]="record.status === 'processed'"
+                        [class.text-blue-800]="record.status === 'processed'"
+                        [class.bg-green-100]="record.status === 'paid'"
+                        [class.text-green-800]="record.status === 'paid'">
+                        {{ record.status }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
           }
 
           @if (activeTab() === 'documents') {
             <div class="bg-white p-6 rounded-xl border border-border-light shadow-sm">
-              <h3 class="text-lg font-bold text-text-main mb-4">Documents</h3>
-              <p class="text-text-secondary text-sm">Documents coming soon...</p>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-text-main">Documents</h3>
+                <button class="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                  <span class="material-symbols-outlined text-[18px]">upload</span>
+                  Upload Document
+                </button>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 border border-border-light rounded-lg hover:bg-background-light transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="size-10 bg-red-50 text-red-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-text-main">Employment Contract</p>
+                      <p class="text-xs text-text-secondary">PDF • 245 KB • Uploaded Jan 15, 2022</p>
+                    </div>
+                  </div>
+                  <button class="text-text-secondary hover:text-primary">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between p-4 border border-border-light rounded-lg hover:bg-background-light transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">badge</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-text-main">ID Card Copy</p>
+                      <p class="text-xs text-text-secondary">PDF • 120 KB • Uploaded Jan 15, 2022</p>
+                    </div>
+                  </div>
+                  <button class="text-text-secondary hover:text-primary">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between p-4 border border-border-light rounded-lg hover:bg-background-light transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="size-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">medical_services</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-text-main">Health Insurance</p>
+                      <p class="text-xs text-text-secondary">PDF • 180 KB • Uploaded Jan 20, 2022</p>
+                    </div>
+                  </div>
+                  <button class="text-text-secondary hover:text-primary">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
             </div>
           }
 
           @if (activeTab() === 'timeoff') {
             <div class="bg-white p-6 rounded-xl border border-border-light shadow-sm">
-              <h3 class="text-lg font-bold text-text-main mb-4">Time Off</h3>
-              <p class="text-text-secondary text-sm">Time off information coming soon...</p>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-text-main">Time Off</h3>
+                <button class="text-primary text-sm font-medium hover:underline">View All</button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <p class="text-xs text-text-secondary font-medium mb-1">Sick Leave</p>
+                  <p class="text-2xl font-bold text-text-main">10 <span class="text-sm text-text-secondary">days</span></p>
+                </div>
+                <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <p class="text-xs text-text-secondary font-medium mb-1">Vacation</p>
+                  <p class="text-2xl font-bold text-text-main">15 <span class="text-sm text-text-secondary">days</span></p>
+                </div>
+                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <p class="text-xs text-text-secondary font-medium mb-1">Personal</p>
+                  <p class="text-2xl font-bold text-text-main">5 <span class="text-sm text-text-secondary">days</span></p>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-text-main mb-4">Recent Leave Requests</h4>
+                <div class="space-y-3">
+                  @for (request of dataService.leaveRequests().filter(r => r.employee.id === emp.id).slice(0, 3); track request.id) {
+                    <div class="flex items-center justify-between p-3 bg-background-light rounded-lg">
+                      <div>
+                        <p class="text-sm font-medium text-text-main">{{ request.type }}</p>
+                        <p class="text-xs text-text-secondary">{{ request.startDate }} - {{ request.endDate }}</p>
+                      </div>
+                      <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                        [class.bg-amber-100]="request.status === 'pending'"
+                        [class.text-amber-800]="request.status === 'pending'"
+                        [class.bg-emerald-100]="request.status === 'approved'"
+                        [class.text-emerald-800]="request.status === 'approved'"
+                        [class.bg-slate-100]="request.status === 'rejected'"
+                        [class.text-slate-600]="request.status === 'rejected'">
+                        {{ request.status }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
           }
 
           @if (activeTab() === 'benefits') {
             <div class="bg-white p-6 rounded-xl border border-border-light shadow-sm">
-              <h3 class="text-lg font-bold text-text-main mb-4">Benefits</h3>
-              <p class="text-text-secondary text-sm">Benefits information coming soon...</p>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-text-main">Benefits</h3>
+                <button class="text-primary text-sm font-medium hover:underline">Manage</button>
+              </div>
+              <div class="space-y-4">
+                <div class="p-4 border border-border-light rounded-lg">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div class="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">health_and_safety</span>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-text-main">Health Insurance</p>
+                      <p class="text-xs text-text-secondary">Premium Plan • Active</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 border border-border-light rounded-lg">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div class="size-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">savings</span>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-text-main">401(k) Retirement Plan</p>
+                      <p class="text-xs text-text-secondary">5% Company Match • Active</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 border border-border-light rounded-lg">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div class="size-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined">fitness_center</span>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-text-main">Gym Membership</p>
+                      <p class="text-xs text-text-secondary">Company Sponsored • Active</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           }
         </div>
