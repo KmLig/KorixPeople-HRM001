@@ -21,6 +21,9 @@ export class AttendanceComponent {
   clockInTime = signal<string | null>(null);
   todayWorkHours = signal(0);
   todayBreakHours = signal(0);
+  isOnBreak = signal(false);
+  breakStartTime = signal<string | null>(null);
+  breakHistory = signal<Array<{start: string, end: string, duration: number}>>([]);
 
   constructor(public dataService: DataService) {
     // Update time every second
@@ -186,5 +189,62 @@ export class AttendanceComponent {
     const ampm = endHour >= 12 ? 'PM' : 'AM';
     
     return `${endHour12}:${startMin.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  // Break Management
+  startBreak(): void {
+    if (!this.isClockedIn()) return;
+    
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    this.isOnBreak.set(true);
+    this.breakStartTime.set(timeString);
+  }
+
+  endBreak(): void {
+    if (!this.isOnBreak() || !this.breakStartTime()) return;
+    
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    const breakDuration = this.calculateHoursBetween(this.breakStartTime()!, timeString);
+    const currentBreakHours = this.todayBreakHours();
+    this.todayBreakHours.set(currentBreakHours + breakDuration);
+    
+    // Add to break history
+    const history = this.breakHistory();
+    this.breakHistory.set([
+      ...history,
+      {
+        start: this.breakStartTime()!,
+        end: timeString,
+        duration: breakDuration
+      }
+    ]);
+    
+    this.isOnBreak.set(false);
+    this.breakStartTime.set(null);
+  }
+
+  getCurrentBreakDuration(): number {
+    if (!this.isOnBreak() || !this.breakStartTime()) return 0;
+    
+    const now = new Date();
+    const currentTime = now.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    return this.calculateHoursBetween(this.breakStartTime()!, currentTime);
   }
 }
