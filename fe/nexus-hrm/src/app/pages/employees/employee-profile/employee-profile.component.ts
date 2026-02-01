@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DataService } from '../../../services/data.service';
 import { Employee } from '../../../models/employee.model';
@@ -7,7 +7,7 @@ import { Employee } from '../../../models/employee.model';
 @Component({
   selector: 'app-employee-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CurrencyPipe],
   templateUrl: './employee-profile.component.html',
   styleUrl: './employee-profile.component.scss'
 })
