@@ -221,10 +221,32 @@
                     <p class="text-xl font-bold">{{ todayWorkHours() }}h</p>
                   </div>
                   <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center">
-                    <p class="text-blue-100 text-xs mb-1">Expected Out</p>
-                    <p class="text-xl font-bold">{{ getExpectedClockOut() }}</p>
+                    <p class="text-blue-100 text-xs mb-1">Break Time</p>
+                    <p class="text-xl font-bold">{{ todayBreakHours() }}h</p>
                   </div>
                 </div>
+
+                @if (isOnBreak()) {
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 mb-3">
+                    <p class="text-blue-100 text-xs mb-1">On Break</p>
+                    <p class="text-lg font-bold">{{ getCurrentBreakDuration().toFixed(1) }}h</p>
+                    <p class="text-blue-100 text-xs mt-1">Started: {{ breakStartTime() }}</p>
+                  </div>
+                  <button 
+                    (click)="endBreak()"
+                    class="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-colors shadow-lg flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">pause</span>
+                    End Break
+                  </button>
+                } @else {
+                  <button 
+                    (click)="startBreak()"
+                    [disabled]="!isClockedIn()"
+                    class="w-full py-2 bg-white/20 hover:bg-white/30 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mb-2">
+                    <span class="material-symbols-outlined text-[18px]">coffee</span>
+                    Start Break
+                  </button>
+                }
 
                 <button 
                   (click)="clockOut()"
